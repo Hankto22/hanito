@@ -1,0 +1,107 @@
+.contact {
+  padding: 2rem;
+  background: linear-gradient(135deg, #ffe5b4, #ffcccb);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.contact h2 {
+  text-align: center;
+  color: #d1495b;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.contact form {
+  max-width: 600px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.contact label {
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.contact input,
+.contact textarea {
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fdfdfd;
+  transition: border-color 0.3s ease;
+}
+
+.contact input:focus,
+.contact textarea:focus {
+  border-color: #ff6f61;
+  outline: none;
+}
+
+.contact button {
+  margin-top: 1.5rem;
+  padding: 0.75rem;
+  background-color: #ff6f61;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.contact button:hover {
+  background-color: #d1495b;
+  transform: scale(1.03);
+}
+/* style.css */
+
+/* Default (light mode) styles */
+body {
+  background-color: #ffffff;
+  color: #333333;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.thank-you {
+  text-align: center;
+  padding: 50px;
+}
+
+.thank-you h2 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.thank-you p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
+
+.thank-you a {
+  text-decoration: none;
+  color: #007BFF;
+  font-weight: bold;
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #121212;
+    color: #e0e0e0;
+  }
+
+  .thank-you a {
+    color: #90caf9;
+  }
+}
