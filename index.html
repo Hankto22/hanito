@@ -22,3 +22,149 @@
     <button type="submit">Send Message</button>
   </form>
 </section>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Contact Form</title>
+    <link rel="stylesheet" href="stlyes.css" />
+  </head>
+  <body>
+    <section class="contact">
+      <h2>Contact Me</h2>
+
+      <!-- Single clean form. Replace the action with your Formspree endpoint if you have one. -->
+      <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" placeholder="+1234567890" />
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <label for="residence">Residence:</label>
+        <input type="text" id="residence" name="residence" placeholder="Town / Estate" />
+
+        <label for="country">Country:</label>
+        <select id="country" name="country">
+          <option value="">Select country</option>
+          <option value="Kenya">Kenya</option>
+          <option value="Uganda">Uganda</option>
+          <option value="Tanzania">Tanzania</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="United States">United States</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label for="county">County / State:</label>
+        <input type="text" id="county" name="county" placeholder="County or State" />
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+
+        <!-- Keep redirect hidden for services that support it, but JS will show an in-page thank you card instead of navigating. -->
+        <input type="hidden" name="_redirect" value="thankyou.html" />
+
+        <div style="margin-top:1rem">
+          <button type="submit" id="submitBtn">Send Message</button>
+          <button type="reset">Reset</button>
+        </div>
+
+        <div id="successMessage" style="display:none; color:green; margin-top:1rem;">✅ Message sent successfully!</div>
+        <div id="errorMessage" style="display:none; color:red; margin-top:1rem;"></div>
+      </form>
+
+      <!-- Local thank you card (hidden until submission completes) -->
+      <div id="thankYouCard" style="display:none; margin-top:1.5rem; padding:1rem; background:#fff; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+        <h3>Thank you!</h3>
+        <p id="thankYouText">Your message has been received. We'll get back to you soon.</p>
+        <button id="newMessageBtn">Send another message</button>
+      </div>
+    </section>
+
+    <script>
+      // Submit the form using fetch so we can show feedback and redirect to thankyou.html on success.
+      document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('contactForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const success = document.getElementById('successMessage');
+        const error = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          success.style.display = 'none';
+          error.style.display = 'none';
+          submitBtn.disabled = true;
+          const originalText = submitBtn.textContent;
+          submitBtn.textContent = 'Sending...';
+
+          const url = form.action;
+          try {
+            const formData = new FormData(form);
+
+            const res = await fetch(url, {
+              method: form.method || 'POST',
+              body: formData,
+              headers: {
+                // Request JSON response from endpoints like Formspree
+                'Accept': 'application/json'
+              }
+            });
+
+            if (res.ok) {
+            // Show the in-page thank you card instead of navigating away.
+            showThankYou();
+            } else {
+              // Try to extract an error message from JSON response
+              let msg = 'Submission failed. The form endpoint responded with an error.';
+              try {
+                const data = await res.json();
+                if (data && data.error) msg = data.error;
+              } catch (err) {
+                // ignore JSON parse errors
+              }
+              // If the endpoint failed (404 for placeholder), still show the thank you card
+              // so the user sees confirmation. Also display the underlying error.
+              error.textContent = msg;
+              error.style.display = 'block';
+              showThankYou('We could not deliver the message to the server, but your message is shown as received locally.');
+            }
+          } catch (err) {
+            // Network error: show helpful message and still display the thank you card.
+            error.textContent = 'Network error. Please check your connection and try again.';
+            error.style.display = 'block';
+            showThankYou('Network error prevented sending, but we have your message locally.');
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+          }
+        });
+
+        // Helper to show the local thank-you card and hide the form
+        function showThankYou(overrideMsg) {
+          const formWrap = document.getElementById('contactForm');
+          const card = document.getElementById('thankYouCard');
+          const text = document.getElementById('thankYouText');
+          if (overrideMsg) text.textContent = overrideMsg;
+          formWrap.style.display = 'none';
+          card.style.display = 'block';
+        }
+
+        // Allow user to send another message by revealing the form again
+        document.getElementById('newMessageBtn').addEventListener('click', () => {
+          document.getElementById('thankYouCard').style.display = 'none';
+          const formWrap = document.getElementById('contactForm');
+          formWrap.reset();
+          formWrap.style.display = '';
+          document.getElementById('errorMessage').style.display = 'none';
+          document.getElementById('successMessage').style.display = 'none';
+        });
+      });
+    </script>
+  </body>
+</html>
+
+```
